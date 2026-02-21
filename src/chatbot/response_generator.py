@@ -1,14 +1,11 @@
 import os
 import sys
 from datetime import date, timedelta
-from typing import Optional, Tuple, List, Dict, Any
+from typing import Optional, Tuple, List, Dict
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+from src.chatbot.entity_extractor import resolve_time_range
 from src.data.cache import fetch_metrics, get_latest_metrics
-from src.recommendations.rules_engine import RecommendationEngine
-
-# Initialize recommendation engine once
-recommendation_engine = RecommendationEngine()
 
 
 def format_value(metric: str, value: Optional[float]) -> str:
@@ -111,25 +108,7 @@ def compare_response(metric: str, rows: List[Dict]) -> str:
                 f"to {latest_fmt} on {latest['date']} (a change of {diff_fmt}).")
 
 
-def advice_response(metric: Optional[str], rows: List[Dict]) -> str:
-    """Generate response for advice intent."""
-    if not rows:
-        return "I don't have any recent data to base advice on. Please fetch some data first."
-
-    latest = rows[-1]  # assuming rows are sorted ascending by date
-    recovery = latest.get('recovery_score')
-
-    workout, diet = recommendation_engine.get_advice(recovery, latest)
-
-    if metric:
-        # If user asked specifically about improving a metric, we could tailor response
-        # For now, just append a note.
-        return f"{workout}\n\n{diet}\n\n(Since you asked about {metric}, consider focusing on activities that support that metric.)"
-    else:
-        return f"{workout}\n\n{diet}"
-
-
-def generate_response(intent: str, metric: Optional[str], time_range_info: Optional[Tuple], query: str) -> str:
+def generate_response(intent: str, metric: Optional[str], time_range_info: Optional[Tuple[str, Tuple[date, date]]]) -> str:
     """
     Main entry point: generate a response based on intent and extracted entities.
     """
@@ -145,22 +124,15 @@ def generate_response(intent: str, metric: Optional[str], time_range_info: Optio
         else:
             return "I don't have any data yet. Please fetch some historical data first."
 
-    elif intent in ['get_history', 'compare', 'advice']:
+    elif intent in ['get_history', 'compare']:
         # For these, we need to determine a date range
         if time_range_info:
-            from src.chatbot.entity_extractor import resolve_time_range
             try:
                 start, end = resolve_time_range(time_range_info, today)
             except Exception as e:
                 return f"Could not understand the time range: {e}"
         else:
-            # Default range: last 7 days for history/compare, last 30 for advice? But advice uses latest.
-            if intent == 'advice':
-                # Advice just needs latest, so we can get latest row directly
-                latest_row = get_latest_metrics()
-                rows = [dict(latest_row)] if latest_row else []
-                return advice_response(metric, rows)
-            else:
+            # Default range: last 7 days for history/compare
                 # Default to last 7 days
                 end = today - timedelta(days=1)
                 start = end - timedelta(days=6)
@@ -177,8 +149,6 @@ def generate_response(intent: str, metric: Optional[str], time_range_info: Optio
             return get_history_response(metric, start, end, rows_dict)
         elif intent == 'compare':
             return compare_response(metric, rows_dict)
-        elif intent == 'advice':
-            return advice_response(metric, rows_dict)
         else:
             return "I'm not sure how to answer that."
     else:

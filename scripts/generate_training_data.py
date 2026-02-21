@@ -50,7 +50,7 @@ def generate_queries_for_intent(intent, num_samples=150):
 
 def main():
     random.seed(42)  # for reproducibility
-    num_per_intent = 200  # increase to get more variety
+    num_per_intent = 1250  # increase to get more variety
 
     all_queries = []
     for intent in INTENTS:

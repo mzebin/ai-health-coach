@@ -3,25 +3,63 @@
 Templates and synonyms for generating training data.
 """
 
-# Canonical metric names (column names in DB) and their synonyms
 METRIC_SYNONYMS = {
-    'recovery_score': ['recovery', 'recovery score', 'recovery index', 'recovery level'],
-    'movement_score': ['movement', 'movement score', 'movement index', 'activity score'],
-    'sleep_score': ['sleep', 'sleep score', 'sleep quality', 'sleep rating'],
-    'total_sleep_min': ['total sleep', 'sleep time', 'sleep duration', 'hours slept', 'sleep length'],
-    'sleep_efficiency': ['sleep efficiency', 'efficiency', 'sleep quality percentage'],
-    'deep_sleep_min': ['deep sleep', 'deep sleep minutes', 'deep sleep duration'],
-    'rem_sleep_min': ['rem sleep', 'rem', 'rem duration'],
-    'light_sleep_min': ['light sleep', 'light sleep minutes'],
-    'avg_temperature': ['temperature', 'skin temperature', 'body temperature', 'avg temp'],
-    'total_steps': ['steps', 'step count', 'steps taken'],
-    'hrv_avg': ['hrv', 'heart rate variability', 'hrv average'],
-    'rhr_avg': ['resting heart rate', 'rhr', 'resting hr', 'night rhr'],
-    'active_minutes': ['active minutes', 'activity minutes', 'active time'],
-    'vo2_max': ['vo2 max', 'vo2', 'cardio fitness'],
+    'recovery_score': [
+        'recovery', 'recovery score', 'recovery index',
+        'recovery level', 'readiness', 'recovery rating'
+    ],
+    'movement_score': [
+        'movement', 'movement score', 'movement index',
+        'activity score', 'daily movement'
+    ],
+    'sleep_score': [
+        'sleep', 'sleep score', 'sleep quality',
+        'sleep rating', 'sleep performance'
+    ],
+    'total_sleep_min': [
+        'total sleep', 'sleep time', 'sleep duration',
+        'hours slept', 'sleep length', 'time asleep'
+    ],
+    'sleep_efficiency': [
+        'sleep efficiency', 'efficiency',
+        'sleep quality percentage'
+    ],
+    'deep_sleep_min': [
+        'deep sleep', 'deep sleep minutes',
+        'deep sleep duration'
+    ],
+    'rem_sleep_min': [
+        'rem sleep', 'rem', 'rem duration'
+    ],
+    'light_sleep_min': [
+        'light sleep', 'light sleep minutes'
+    ],
+    'avg_temperature': [
+        'temperature', 'skin temperature',
+        'body temperature', 'avg temp'
+    ],
+    'total_steps': [
+        'steps', 'step count', 'steps taken',
+        'daily steps', 'how many steps'
+    ],
+    'hrv_avg': [
+        'hrv', 'heart rate variability',
+        'hrv average'
+    ],
+    'rhr_avg': [
+        'resting heart rate', 'rhr',
+        'resting hr', 'night rhr'
+    ],
+    'active_minutes': [
+        'active minutes', 'activity minutes',
+        'active time', 'exercise time'
+    ],
+    'vo2_max': [
+        'vo2 max', 'vo2',
+        'cardio fitness', 'fitness level'
+    ],
 }
 
-# Time expressions for history intent (these will be used as placeholders)
 TIME_RANGES = [
     'last 3 days',
     'last 5 days',
@@ -37,12 +75,15 @@ TIME_RANGES = [
     'this year',
     'yesterday',
     'today',
+    'last night',
+    'this morning',
     'the past few days',
     'the last couple of weeks',
     'over the weekend',
+    '2 days ago',
+    '3 weeks ago',
 ]
 
-# Pairs for comparison (time1 vs time2)
 COMPARE_PAIRS = [
     ('today', 'yesterday'),
     ('this week', 'last week'),
@@ -53,107 +94,156 @@ COMPARE_PAIRS = [
     ('this week', 'the previous week'),
 ]
 
-# Templates for each intent
-# The placeholders {metric}, {time_range}, {time1}, {time2} will be filled later.
 TEMPLATES = {
     'get_current': [
+        # Standard questions
         "What is my {metric} today?",
+        "What’s my {metric} right now?",
         "How is my {metric}?",
-        "What is my {metric}?",
-        "Show me today's {metric}",
-        "Tell me my {metric}",
-        "What's my {metric} now?",
-        "Current {metric}",
-        "What is the value of {metric} today?",
-        "Give me my {metric} for today",
-        "How did I do on {metric} today?",
-        "What's my current {metric}?",
-        "Can you tell me my {metric}?",
-        "I want to know my {metric}",
-        "What is my {metric} right now?",
         "How is my {metric} doing today?",
-        "What's today's {metric}?",
+        "What is my current {metric}?",
+        "Tell me my {metric}",
+        "Show me today's {metric}",
+        "Give me my {metric} for today",
+        "Is my {metric} good today?",
+        "Did I do well on {metric} today?",
+        "What is the value of {metric} today?",
+        "Can you check my {metric}?",
         "Do you have my {metric} for today?",
-        "Show me my {metric}",
+
+        # Command style
+        "Check my {metric}",
         "Get my {metric}",
-        "Tell me the current {metric}",
+        "Pull up my {metric}",
+        "Open {metric}",
+        "Display {metric}",
+        "Fetch {metric}",
+        "Load my {metric}",
+        "View {metric}",
+        "Show current {metric}",
+
+        # Fragment style
+        "{metric} today",
+        "{metric} now",
+        "current {metric}",
+        "{metric} status",
+        "{metric} value?",
+        "today {metric}",
+        "my {metric}",
+        "{metric} update",
+        "{metric} stats",
+        "how {metric} today",
+
+        # Casual
+        "How’s my {metric} looking?",
+        "Is my {metric} okay?",
+        "Is {metric} bad today?",
     ],
+
     'get_history': [
+        # Standard
         "How was my {metric} {time_range}?",
         "What was my {metric} over {time_range}?",
-        "Give me my {metric} for {time_range}",
-        "Show me {metric} for {time_range}",
-        "What is my average {metric} {time_range}?",
-        "Tell me the {metric} trend {time_range}",
-        "How did my {metric} look {time_range}?",
-        "What was my {metric} like {time_range}?",
+        "Show my {metric} for {time_range}",
+        "Give me {metric} data for {time_range}",
+        "Tell me my {metric} during {time_range}",
+        "What happened to my {metric} {time_range}?",
+        "How did my {metric} perform {time_range}?",
+        "What values did {metric} have {time_range}?",
         "Can I see my {metric} {time_range}?",
-        "{time_range} what was my {metric}?",
         "During {time_range}, what was my {metric}?",
-        "I'd like to see my {metric} from {time_range}",
-        "Show me the history of {metric} for {time_range}",
-        "What values did my {metric} have {time_range}?",
+        "Show history of {metric} for {time_range}",
+
+        # Trend focused
+        "Did my {metric} improve {time_range}?",
+        "Did my {metric} decline {time_range}?",
+        "Was my {metric} stable {time_range}?",
+        "Show trend of {metric} {time_range}",
+        "Graph {metric} {time_range}",
+        "Analyze my {metric} {time_range}",
+        "Summary of {metric} {time_range}",
+        "Average {metric} {time_range}",
         "How did my {metric} change {time_range}?",
-        "Tell me about my {metric} over {time_range}",
-        "Give me the details of {metric} {time_range}",
-        "What was the trend of {metric} {time_range}?",
-        "Can you summarize my {metric} for {time_range}?",
+
+        # Fragment
+        "{metric} last week",
+        "{metric} last month",
+        "{metric} yesterday",
+        "{metric} past 7 days",
+        "{time_range} {metric}",
+        "{metric} history",
+        "{metric} over {time_range}",
+        "stats for {metric} {time_range}",
+
+        # Casual
+        "How’s my {metric} been {time_range}?",
+        "Was {metric} good {time_range}?",
+        "Any change in {metric} {time_range}?",
     ],
+
     'compare': [
+        # Standard
         "Compare my {metric} {time1} vs {time2}",
         "How does my {metric} compare between {time1} and {time2}?",
-        "What's the difference in {metric} between {time1} and {time2}?",
+        "What’s the difference in {metric} between {time1} and {time2}?",
         "Is my {metric} better {time1} or {time2}?",
-        "Show me comparison of {metric} for {time1} and {time2}",
-        "How did {metric} change from {time2} to {time1}?",
-        "Which day had better {metric}, {time1} or {time2}?",
-        "Compare {metric} values: {time1} vs {time2}",
-        "What is the difference in {metric} between {time1} and {time2}?",
-        "How does {time1} {metric} compare to {time2}?",
-        "Tell me if my {metric} improved from {time2} to {time1}",
-        "Give me a comparison of {metric} between {time1} and {time2}",
+        "Which had higher {metric}, {time1} or {time2}?",
+        "Show {metric} comparison for {time1} and {time2}",
+        "How much did {metric} change from {time2} to {time1}?",
+        "Did {metric} improve from {time2} to {time1}?",
+        "Difference in {metric}: {time1} vs {time2}",
+        "Analyze {metric} {time1} against {time2}",
+
+        # Command style
+        "Compare {metric} {time1} {time2}",
+        "{metric} {time1} vs {time2}",
+        "{time1} vs {time2} {metric}",
+        "{metric} difference {time1} {time2}",
+        "check {metric} {time1} and {time2}",
+        "show {metric} {time1} {time2}",
+
+        # Fragment / messy
+        "today vs yesterday {metric}",
+        "{metric} today yesterday",
+        "{metric} this week last week",
+        "{metric} difference today yesterday",
     ],
+
     'advice': [
-        # Workout/diet generic
-        "What workout should I do?",
-        "Give me diet advice",
-        "Any workout suggestions?",
-        "What should I eat today?",
-        "Recovery advice?",
-        "Should I work out today?",
-        "What's a good workout based on my recovery?",
-        "Any diet tips for today?",
-        "What activity do you recommend?",
-        "What should I eat to optimize recovery?",
-        "Any advice for today?",
-        "Workout recommendation?",
-        "Can you suggest a meal plan?",
-        "What kind of exercise is good today?",
-        "Do I need rest or training?",
-        "What's a good training intensity for today?",
-        "Give me some health tips",
-        "How should I train today?",
-        "What should I focus on today?",
-        # Improvement and why questions (will be handled by LLM later)
-        "How can I improve my {metric}?",
-        "Why is my {metric} low today?",
-        "Why has my {metric} gone down recently?",
-        "What can I do to increase my {metric}?",
-        "Suggestions to improve {metric}",
-        "Any tips for better {metric}?",
-        "How do I get a higher {metric}?",
+        # Why
+        "Why is my {metric} low?",
         "Why did my {metric} drop?",
-        "What caused my {metric} to decrease?",
-        "How can I boost my {metric}?",
-        "Why is my {metric} not good?",
-        "What should I do to raise my {metric}?",
-        "Why has my {metric} been low lately?",
-        "How to improve my {metric} score?",
+        "Why has my {metric} decreased?",
+        "What caused my {metric} to go down?",
+        "Why is my {metric} worse than usual?",
+        "{metric} low why?",
+        "why {metric} bad",
+        "Why is {metric} bad today?",
+        "Why has my {metric} been declining?",
         "What affects my {metric} negatively?",
+
+        # Improve
+        "How can I improve my {metric}?",
+        "How do I increase my {metric}?",
+        "Tips to improve {metric}",
+        "Ways to boost {metric}",
+        "What helps increase {metric}?",
+        "How to optimize {metric}?",
+        "Improve {metric}",
+        "boost {metric}",
         "How can I make my {metric} better?",
-        "Why did my {metric} go down {time_range}?",
-        "What made my {metric} decrease over {time_range}?",
-        "How can I prevent my {metric} from dropping?",
-        "Tips for maintaining good {metric}",
+        "How to get higher {metric}?",
+
+        # General fitness queries
+        "Should I train today?",
+        "Do I need rest?",
+        "What workout should I do?",
+        "What should I eat today?",
+        "Any recovery advice?",
+        "Is today a rest day?",
+        "What activity do you suggest?",
+        "Give me health tips",
+        "How is my overall performance?",
+        "Am I improving overall?",
     ]
 }

@@ -6,13 +6,31 @@ class OllamaClient:
         self.model = model
         self.base_url = base_url
 
-    def generate(self, prompt, context=None, max_tokens=150):
-        """Send a prompt to Ollama and return a concise response."""
-        # Build the prompt with context if provided
+    def generate(self, query, history=None, context=None, max_tokens=300):
+        """
+        Generate a response with optional conversation history and context.
+
+        Args:
+            query: Current user query.
+            history: List of (role, message) tuples (role = 'user' or 'assistant').
+            context: Additional context (e.g., latest metrics).
+            max_tokens: Maximum tokens in response.
+        """
+        # Build conversation from history
+        conversation = ""
+        if history:
+            # Take last 5 exchanges (10 entries) to avoid token limits
+            recent = history[-10:] if len(history) > 10 else history
+            for role, msg in recent:
+                prefix = "User" if role == "user" else "Assistant"
+                conversation += f"{prefix}: {msg}\n"
+        # Add current query
+        conversation += f"User: {query}\nAssistant:"
+
+        # Prep context if provided
+        full_prompt = conversation
         if context:
-            full_prompt = f"Context: {context}\n\nUser: {prompt}\nAssistant:"
-        else:
-            full_prompt = f"User: {prompt}\nAssistant:"
+            full_prompt = f"Context: {context}\n\n{conversation}"
 
         # System instruction for brevity
         system_instruction = (
