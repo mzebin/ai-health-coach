@@ -59,6 +59,7 @@ TEMPLATES = {
     'get_current': [
         "What is my {metric} today?",
         "How is my {metric}?",
+        "What is my {metric}?",
         "Show me today's {metric}",
         "Tell me my {metric}",
         "What's my {metric} now?",
