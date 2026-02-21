@@ -123,7 +123,6 @@ def generate_response(intent: str, metric: Optional[str], time_range_info: Optio
             return get_current_response(metric, row_dict)
         else:
             return "I don't have any data yet. Please fetch some historical data first."
-
     elif intent in ['get_history', 'compare']:
         # For these, we need to determine a date range
         if time_range_info:
@@ -147,9 +146,7 @@ def generate_response(intent: str, metric: Optional[str], time_range_info: Optio
 
         if intent == 'get_history':
             return get_history_response(metric, start, end, rows_dict)
-        elif intent == 'compare':
-            return compare_response(metric, rows_dict)
         else:
-            return "I'm not sure how to answer that."
+            return compare_response(metric, rows_dict)
     else:
-        return "I don't know how to handle that intent."
+        return "I'm not sure how to answer that."

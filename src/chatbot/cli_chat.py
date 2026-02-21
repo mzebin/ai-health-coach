@@ -39,9 +39,10 @@ def clear_screen():
 def print_help():
     help_text = """
 [bold cyan]Available commands:[/bold cyan]
+  @ai          - To ask AI anything
   /clear       - Clear the screen
   /new_chat    - Clear screen and reset conversation history
-  /update [n]  - Fetch last n days of data (default: 7)
+  /update \[n]  - Fetch last n days of data (default: 7)
   /history     - Show recent chat history
   /metrics     - Show available metrics
   /help        - Show this help message
@@ -117,7 +118,7 @@ def ask_ai(query, llm_client, max_tokens=300):
     if latest:
         context = f"Latest metrics: {dict(latest)}"
     recent = get_recent_history(chat_history, n=5) if chat_history else None
-    return llm_client.generate(query, history=recent, context=context)
+    return llm_client.generate(query, history=recent, context=context, max_tokens=max_tokens)
 
 
 def generate_advice_with_ai(query, metric, time_range_info, llm_client):
